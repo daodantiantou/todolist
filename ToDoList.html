@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style>
+	*{
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+	body{
+		background: #CDCDCD;
+	}
+	header{
+		width: 100%;
+		height: 50px;
+		background: rgba(47,47,47,0.98);
+	}
+	header .serch{
+		width: 600px;
+		height: 50px;
+		margin: 0 auto;
+	}
+	header label{
+		width: 100px;
+	    line-height: 50px;
+	    color: #DDD;
+	    font-size: 24px;
+	    cursor: pointer;
+	    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	}
+	header input{
+		float: right;
+	    width: 60%;
+	    height: 24px;
+	    margin-top: 12px;
+	    text-indent: 10px;
+	    border-radius: 5px;
+	    box-shadow: 0 1px 0 rgba(255,255,255,0.24), 0 1px 6px rgba(0,0,0,0.45) inset;
+	    border: none;
+	    outline: none;
+	}
+	section{
+		width: 600px;
+		margin: 0 auto;
+		
+		
+
+	}
+	section .doing{
+		height: 31px;
+		font-size: 24px;
+		margin-bottom: 20px;
+		margin-top: 20px;
+		font-weight: bold;
+	}
+	section .doing span{
+		padding: 0 5px;
+	    height: 20px;
+	    border-radius: 20px;
+	    background: #E6E6FA;
+	    line-height: 22px;
+	    text-align: center;
+	    color: #666;
+	    font-size: 14px;
+	    float: right;
+	}
+	section .inof{
+		position: relative;
+		height: 32px;
+	    line-height: 32px;
+	    background: #fff;
+	    margin-bottom: 10px;
+	    padding: 0 45px;
+	    border-radius: 3px;
+	    border-left: 5px solid #629A9C;
+	    box-shadow: 0 1px 2px rgba(0,0,0,0.07);
+	}
+	
+	section .inof .ip{
+		position: absolute;
+		top: 2px;
+    	left: 10px;
+		width: 22px;
+	    height: 22px;
+	    cursor: pointer;
+	    margin: 3px 3px 3px 4px;
+	}
+	section .inof p{
+		display: block;
+		width: 505px;
+		height: 32px;
+		margin: 0;
+	}
+	section .inof p input{
+		width: 505px;
+		height: 25px;
+		outline: none;
+		color: #5D5D5D;
+	}
+	section .inof a{
+		position: absolute;
+	    top: 2px;
+	    right: 5px;
+	    display: inline-block;
+	    width: 14px;
+	    height: 12px;
+	    border-radius: 14px;
+	    border: 6px double #FFF;
+	    background: #CCC;
+	    line-height: 14px;
+	    text-align: center;
+	    color: #FFF;
+	    font-weight: bold;
+	    font-size: 14px;
+	    cursor: pointer;
+	}
+	section .inofbox1{
+		background: #bcbcbc;
+		box-shadow: 0 1px 2px rgba(0,0,0,0.07);
+		opacity: .5;
+	}
+</style>
+<body>
+	<header>
+		<div class="serch">
+			<label for="name">ToDoList</label>
+			<input type="text" id="name" placeholder="添加ToDo">
+		</div>
+	</header>
+	<section>
+		<h2 class="doing">
+			正在进行
+			<span id="span1"></span>
+		</h2>
+		<div class="inofbox" id="box1">
+			<!-- <div class="inof">
+				<input type="checkbox" class="ip">
+				<p><input type="text" ></p>
+				<a href="">-</a>
+			</div> -->
+		</div>
+		<h2 class="doing">
+			已经完成
+			<span id="span2"></span>
+		</h2>
+		<div class="inofbox inofbox1" id="box2">
+			<!-- <div class="info">
+				<input type="checkbox" checked>
+				<p>dgkjas</p>
+				<a href="">-</a>
+			</div> -->
+		</div>
+	</section>
+</body>
+<script>
+
+
+let arr1=localStorage.arr1?localStorage.arr1.split(','):[]
+let arr2=localStorage.arr2?localStorage.arr2.split(','):[]
+let box1=document.querySelector('#box1')
+let span1=document.querySelector('#span1')
+let span2=document.querySelector('#span2')
+update()
+
+function update(){
+	this.value=''
+	box1.innerText=''
+	box2.innerText=''
+	span1.innerText=arr1.length
+	span2.innerText=arr2.length
+	localStorage.arr1=arr1.join(',')
+	localStorage.arr2=arr2.join(',')
+arr1.forEach(function (item,index){
+
+	let inof=document.createElement('div')
+	inof.className='inof'
+	box1.appendChild(inof)
+	let inp=document.createElement('input')
+	inp.setAttribute('type','checkbox')
+	inp.className='ip'
+	inof.appendChild(inp)
+	inp.onclick=function(){
+		arr1.splice(index,1)
+		arr2.unshift(item)
+		update()
+	}
+	let a=document.createElement('a')
+	a.innerText='-'
+	inof.appendChild(a)
+	a.onclick=function(){
+		arr1.splice(index,1)
+		update()
+	}
+	let p=document.createElement('p')
+	p.innerText=item
+	p.ondblclick=function(){
+		let input6=document.createElement('input')
+		let con=p.innerText;
+		p.innerText=''
+		input6.value=con
+		p.appendChild(input6)
+		input6.focus()
+		input6.onkeydown=function(e){
+			if(e.keyCode!='' && e.keyCode==13){
+				arr1[index]=this.value
+				update()
+			}
+		}
+		input6.onblur=function(){
+			if(input6.value!=''){
+				arr1[index]=this.value
+				update()
+			}
+		}		
+	}
+	inof.appendChild(p)
+})
+
+
+arr2.forEach(function (item,index){
+	let box1=document.querySelector('#box2')
+	let inof=document.createElement('div')
+	inof.className='inof'
+	box1.appendChild(inof)
+	let inp=document.createElement('input')
+	inp.setAttribute('type','checkbox')
+	inp.setAttribute('checked','')
+	inp.className='ip'
+	inof.appendChild(inp)
+	inp.onclick=function(){
+		arr2.splice(index,1)
+		arr1.unshift(item)
+		update()
+	}
+	let a=document.createElement('a')
+	a.innerText='-'
+	inof.appendChild(a)
+	a.onclick=function(){
+		arr2.splice(index,1)
+		update()
+	}
+	let p=document.createElement('p')
+	p.innerText=item
+	p.ondblclick=function(){
+		let input6=document.createElement('input')
+		let con=p.innerText;
+		p.innerText=''
+		input6.value=con
+		p.appendChild(input6)
+		input6.focus()
+		let flag=true;
+		input6.onkeydown=function(e){
+			flag=false
+			if(e.keyCode!='' && e.keyCode==13){
+				arr2[index]=this.value
+				update()
+			}
+		}
+		input6.onblur=function(){
+			if(!flag){
+				return;
+			}
+			console.log(1)
+			if(input6.value!=''){
+				arr2[index]=this.value
+				update()
+			}
+		}		
+	}
+	inof.appendChild(p)
+
+})
+}
+
+
+
+
+
+let input=document.querySelector('header input')
+input.onkeydown=function(e){
+	if(e.keyCode==13 && this.value!=''){
+		arr1.unshift(this.value)
+		update()
+		this.value=''
+
+	}
+}
+	/*let renw=document.querySelector('header input')
+	let inofbox=document.querySelector('.inofbox')
+	console.log(renw)
+	let arr1=[];
+	let arr2=[];
+	arr1.forEach(function update(item){
+		let inofbox=document.querySelector('.inofbox')
+		// let box=document.querySelector('.box')
+		// box.appendChild(div)
+		renw.onkeydown=function aa(e){
+			console.log(renw.value)
+		}
+		
+		
+	})
+	inofbox.createElement('div');
+	*/
+	
+</script>
+</html>
